@@ -4,7 +4,7 @@ A minimal Java-based Weather Application that fetches real-time weather data fro
 
 ---
 
-## 📌 Overview
+## Overview
 
 The Weather App allows users to enter a location and view:
 - Temperature
@@ -16,7 +16,7 @@ It demonstrates how Java applications interact with APIs and parse JSON data.
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - Java 18  
 - HTTPURLConnection  
@@ -25,7 +25,7 @@ It demonstrates how Java applications interact with APIs and parse JSON data.
 
 ---
 
-## 🧱 Project Structure
+## Project Structure
 
 - **AppLauncher** – Application entry point  
 - **WeatherAppGui** – Handles the GUI and user interaction  
@@ -33,7 +33,7 @@ It demonstrates how Java applications interact with APIs and parse JSON data.
 
 ---
 
-## 📚 What I Learned
+## What I Learned
 
 - Making API calls using HTTP GET requests  
 - Handling HTTP response codes  
@@ -42,9 +42,8 @@ It demonstrates how Java applications interact with APIs and parse JSON data.
 - Compiling Java with external libraries  
 - Using `-Xlint:deprecation` to handle deprecated APIs  
 
----
 
-## ▶️ Compile & Run
+## Compile & Run
 
 ### Download JSON Simple
 ```bash
