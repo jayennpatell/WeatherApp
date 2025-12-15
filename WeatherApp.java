@@ -3,10 +3,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.imageio.ImageIO;
+import java.awt.event.*;
+import org.json.simple.JSONObject;
 
 
 
 public class WeatherApp extends JFrame {
+    private JSONObject weatherData;
     public WeatherApp(){
         super("Weather App");
         setSize(450, 650);
@@ -27,19 +30,6 @@ public class WeatherApp extends JFrame {
         searchField.setBounds(15, 15, 350, 30);
         add(searchField);
 
-        // search button with image icon
-        ImageIcon searchIcon = loadImage("src/assets/weatherapp_images/search.png");
-        Image searchImg = searchIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        JButton searchButton = new JButton(new ImageIcon(searchImg));
-        searchButton.setFont(new Font("Dialog", Font.PLAIN, 12));
-        searchButton.setBounds(370, 15, 45, 35);
-
-        // change the button to a hand cursor when hovered
-        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        searchButton.setBounds(370, 15, 45, 35); 
-
-        // added to the frame
-        add(searchButton);
 
         // weather image display
         JLabel weatherImageLabel = new JLabel(loadImage("src/assets/weatherapp_images/cloudy.png"));
@@ -81,7 +71,96 @@ public class WeatherApp extends JFrame {
         windspeedLabel.setBounds(310, 500, 90, 55);
         windspeedLabel.setFont(new Font("Dialog", Font.PLAIN, 16));
         add(windspeedLabel);
+
+
+        // search button with image icon
+        ImageIcon searchIcon = loadImage("src/assets/weatherapp_images/search.png");
+        Image searchImg = searchIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        JButton searchButton = new JButton(new ImageIcon(searchImg));
+        searchButton.setFont(new Font("Dialog", Font.PLAIN, 12));
+        searchButton.setBounds(370, 15, 45, 35);
+
+        // change the button to a hand cursor when hovered
+        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        searchButton.setBounds(370, 15, 45, 35); 
+
+        // addinf action listener to the button
+        
+        searchButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e){
+            //get the location from the search field
+            String location = searchField.getText();
+
+            // validate the search field text
+            if(location.replaceAll("\\s","").length()<=0){
+                return;
+            }
+
+            // fetch the weather data from the backend
+            JSONObject weatherData = WeatherAppBackend.fetchData(location);
+
+            // update the GUI components
+
+
+            // upadate the weather image
+            String weatherCondition = (String) weatherData.get("weather_condition");
+            // depending on the weather condition we will upload the image
+            switch(weatherCondition){
+                case "Clear sky":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/clear.png"));
+                    break;
+                case "Partly cloudy":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/cloudy.png"));
+                    break;
+                case "Cloudy":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/cloudy.png"));
+                    break;
+                case "Rain":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/rain.png"));
+                    break;
+                case "Snow":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/snow.png"));
+                    break;
+                case "Fog":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/cloudy.png"));
+                    break;
+                case "Drizzle":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/rain.png"));
+                    break;
+                case "Rain showers":
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/rain.png"));
+                    break;
+                
+                
+                default:
+                    weatherImageLabel.setIcon(loadImage("src/assets/weatherapp_images/cloudy.png"));
+            }
+
+            // update the temperature label
+            double temperature = (double) weatherData.get("temperature");
+            temperatureLabel.setText(String.format("%.1f °C", temperature));
+
+            // update the condition label
+            conditionLabel.setText(weatherCondition);
+
+            // update the humidity label
+            long humidity = (long) weatherData.get("humidity");
+            humidityLabel.setText("<html><b>Humidity</b> " + humidity + "%</html>");
+
+            // update the windspeed label
+            double windspeed = (double) weatherData.get("windspeed");
+            windspeedLabel.setText("<html><b>Windspeed</b> " + windspeed + " km/h</html>");
+
+        }
+    });
+
+    // added to the frame
+    add(searchButton);
+
     }
+    
 
     private ImageIcon loadImage(String path){
         try {
