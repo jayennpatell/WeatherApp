@@ -5,9 +5,11 @@ public class App{
         SwingUtilities.invokeLater(new Runnable(){
             @Override
             public void run(){
-                new WeatherApp().setVisible(true);
+                // new WeatherApp().setVisible(true);
+
+                System.out.println(WeatherAppBackend.fetchData("Tokyo"));
             }
-        }
+        } 
         );
     }
 }
